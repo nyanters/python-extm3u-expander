@@ -29,7 +29,7 @@ def play_mid(m3u, shuffle):
   txt = ini.init(m3u)
   for i in txt:
     with open(tmp_m3u, 'a', encoding='utf-8') as f:
-      print(i+'\n', file=f)
+      print(i, file=f)
   if shuffle:
     cmd = ['mpv', '--shuffle', tmp_m3u]
   else:
