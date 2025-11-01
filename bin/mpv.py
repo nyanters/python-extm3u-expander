@@ -2,12 +2,13 @@
 # -*- coding: utf-8 -*-
 __doc__ = """{f}
 Usage:
-  {f} (-m <m3u>)
+  {f} (-i <m3u> | --input <m3u>) [-s | --shuffle]
   {f} (-h | --help)
 
 Options:
-  -h --help  Show this screen.
-  -m <m3u>   M3U Path (required)
+  -h --help         Show this screen.
+  -i --input <m3u>  M3U Path (required)
+  -s --shuffle      Toggle shuffle mode on.
 """.format(f=__file__)
 
 from docopt import docopt
@@ -18,18 +19,21 @@ import subprocess
 import sys
 
 
-def main(m3u):
-  play_mid(m3u)
+def main(m3u, shuffle):
+  play_mid(m3u, shuffle)
   sys.exit()
 
 
-def play_mid(m3u):
+def play_mid(m3u, shuffle):
   tmp_m3u = os.path.join(Path.home(), 'Downloads', 'tmp.m3u')
   txt = ini.init(m3u)
   for i in txt:
     with open(tmp_m3u, 'a', encoding='utf-8') as f:
       print(i+'\n', file=f)
-  cmd = ['mpv', tmp_m3u]
+  if shuffle:
+    cmd = ['mpv', '--shuffle', tmp_m3u]
+  else:
+    cmd = ['mpv', tmp_m3u]
   subprocess.run(cmd)
   os.remove(tmp_m3u)
   return
@@ -37,4 +41,4 @@ def play_mid(m3u):
 
 if __name__ == "__main__":
   args = docopt(__doc__)
-  main(args['-m'])
+  main(args['--input'], ['--shuffle'])
